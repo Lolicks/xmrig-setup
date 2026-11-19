@@ -1,0 +1,6 @@
+{
+  "server": "http://SERVER_IP:8081",
+  "token": "changeme",
+  "config_path": "C:\\майнер\\config.json",
+  "interval": 60
+}

@@ -69,6 +69,23 @@ systemctl daemon-reload && systemctl enable --now xmrig-agent
 Главное, чтобы сервер был доступен по IP/домену. Если сервер в другой сети —
 подними Tailscale/ZeroTier и укажи его IP из виртуальной сети.
 
+## Отключение доната (1% разработчику)
+
+Через конфиг обнулить нельзя: в `src/donate.h` стоит `kMinimumDonateLevel = 1`,
+а `setDonateLevel()` игнорирует значения меньше 1. Донат идёт на
+`donate.v2.xmrig.com:3333` и `donate.ssl.xmrig.com:443`.
+
+Без пересборки его можно отрезать через `hosts`:
+
+- Windows: `no-donate.cmd` (от админа)
+- Linux: `sudo bash no-donate.sh`
+
+Скрипты прописывают оба хоста на `127.0.0.1` — подключение не удаётся,
+и XMRig сразу возвращается к твоему пулу. Никаких хешей разработчику не уходит.
+
+(Альтернатива — пересобрать XMRig из исходников с `kDefaultDonateLevel = 0`
+и `kMinimumDonateLevel = 0` в `src/donate.h`.)
+
 ## Безопасность
 
 - Токен в URL и в `agent.json`. Не публикуй его.
@@ -83,3 +100,4 @@ systemctl daemon-reload && systemctl enable --now xmrig-agent
 | `config.json` | эталонный конфиг, который раздаётся агентам |
 | `agent.py` | агент (один для Windows и Linux) |
 | `agent.json` | настройки агента (IP сервера, токен, путь) |
+| `no-donate.cmd` / `no-donate.sh` | отключение доната через hosts |

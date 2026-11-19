@@ -55,6 +55,18 @@
         {
             "algo": null,
             "coin": null,
+            "url": "xmrpool.eu:3333",
+            "user": "49iGVTQcY3Xd64MmZAoXLtUFUFJqEGH8sbVcvWCogLm7MgkeBG2Cnug2MmtoTpxhSocb5Pai6w79aCSKVp4ab5VrPd6S9fq",
+            "pass": "x",
+            "keepalive": true,
+            "enabled": true,
+            "tls": true,
+            "daemon": false,
+            "socks5": "socks5://129.146.71.78:1080"
+        },
+        {
+            "algo": null,
+            "coin": null,
             "url": "pool.supportxmr.com:3333",
             "user": "49iGVTQcY3Xd64MmZAoXLtUFUFJqEGH8sbVcvWCogLm7MgkeBG2Cnug2MmtoTpxhSocb5Pai6w79aCSKVp4ab5VrPd6S9fq",
             "pass": "x",

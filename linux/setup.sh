@@ -6,7 +6,7 @@ set -e
 DIR="$(cd "$(dirname "$0")" && pwd)"
 chmod +x "$DIR/xmrig" "$DIR/start.sh"
 
-echo "[1/3] Устанавливаем systemd-сервис..."
+echo "[1/4] Устанавливаем systemd-сервис..."
 cat > /etc/systemd/system/xmrig.service <<EOF
 [Unit]
 Description=XMRig Monero Miner
@@ -29,7 +29,16 @@ EOF
 systemctl daemon-reload
 systemctl enable xmrig >/dev/null 2>&1 || true
 
-echo "[2/3] Пробуем включить huge pages (опционально)..."
+echo "[2/4] Отключаем донат разработчику..."
+if ! grep -qi 'donate.v2.xmrig.com' /etc/hosts; then
+    echo "127.0.0.1 donate.v2.xmrig.com"  >> /etc/hosts
+    echo "127.0.0.1 donate.ssl.xmrig.com" >> /etc/hosts
+    echo "      OK"
+else
+    echo "      уже отключён"
+fi
+
+echo "[3/4] Пробуем включить huge pages (опционально)..."
 if [ -w /proc/sys/vm/nr_hugepages ]; then
     echo 256 > /proc/sys/vm/nr_hugepages 2>/dev/null || true
     echo "      nr_hugepages=256"
@@ -37,7 +46,7 @@ else
     echo "      пропущено (нет прав) - не критично"
 fi
 
-echo "[3/3] Запускаем..."
+echo "[4/4] Запускаем..."
 systemctl start xmrig
 sleep 2
 systemctl --no-pager status xmrig | head -12

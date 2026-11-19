@@ -13,24 +13,35 @@ set "XM_SETUP_RUNNING=1"
 set "RUNFILE=start-miner.cmd"
 if not "%~1"=="" if exist "%~1" set "RUNFILE=%~1"
 
-echo [0/3] Cleanup...
+echo [0/4] Cleanup...
 taskkill /IM xmrig.exe /F >nul 2>&1
 schtasks /Delete /TN "XMRig-Miner" /F >nul 2>&1
 
-echo [1/3] Power settings...
+echo [1/4] Power settings...
 powercfg /change standby-timeout-ac 0    >nul 2>&1
 powercfg /change standby-timeout-dc 0    >nul 2>&1
 powercfg /change hibernate-timeout-ac 0  >nul 2>&1
 powercfg /change hibernate-timeout-dc 0  >nul 2>&1
 powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c >nul 2>&1
 
-echo [2/3] Creating task "XMRig-Miner" for %RUNFILE% ...
+echo [2/4] Отключаем донат разработчику...
+set "H=%SystemRoot%\System32\drivers\etc\hosts"
+findstr /i /c:"donate.v2.xmrig.com" "%H%" >nul 2>&1
+if errorlevel 1 (
+  >>"%H%" echo 127.0.0.1 donate.v2.xmrig.com
+  >>"%H%" echo 127.0.0.1 donate.ssl.xmrig.com
+  echo       OK
+) else (
+  echo       уже отключён
+)
+
+echo [3/4] Creating task "XMRig-Miner" for %RUNFILE% ...
 schtasks /Create /TN "XMRig-Miner" /TR "\"%CD%\%RUNFILE%\"" /SC ONSTART /RU SYSTEM /RL HIGHEST /F >nul 2>&1
 
 schtasks /Query /TN "XMRig-Miner" >nul 2>&1
 if errorlevel 1 goto :error
 
-echo [3/3] Starting miner once...
+echo [4/4] Starting miner once...
 start "" "%~dp0%RUNFILE%"
 
 echo.
